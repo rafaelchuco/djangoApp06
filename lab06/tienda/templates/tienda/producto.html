@@ -1,0 +1,80 @@
+{% extends 'tienda/layout.html' %}
+{% block title %}{{ producto.nombre }} - Tienda{% endblock %}
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'tienda:index' %}">Inicio</a></li>
+    <li class="breadcrumb-item"><a href="{% url 'tienda:productos_por_categoria' producto.categoria.id %}">{{ producto.categoria.nombre }}</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ producto.nombre }}</li>
+  </ol>
+</nav>
+
+<!-- Product Detail -->
+<div class="card mt-4">
+  {% if producto.imagen %}
+    <img class="card-img-top img-fluid" src="{{ producto.imagen.url }}" alt="{{ producto.nombre }}" style="max-height: 400px; object-fit: cover;">
+  {% else %}
+    <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 400px; background: #f8f9fa; color: #6c757d; font-size: 72px;">
+      📦
+    </div>
+  {% endif %}
+  <div class="card-body">
+    <h3 class="card-title">{{ producto.nombre }}</h3>
+    <h4>S/ {{ producto.precio }}</h4>
+    <p class="card-text">
+      <strong>Categoría:</strong> {{ producto.categoria.nombre }}<br>
+      <strong>Stock disponible:</strong> 
+      {% if producto.stock > 0 %}
+        <span class="text-success">{{ producto.stock }} unidades</span>
+      {% else %}
+        <span class="text-danger">Agotado</span>
+      {% endif %}<br>
+      <strong>Fecha de registro:</strong> {{ producto.pub_date|date:"d/m/Y" }}
+    </p>
+    <span class="text-warning">⭐ ⭐ ⭐ ⭐ ⭐</span>
+    5.0 estrellas
+    <br><br>
+    {% if producto.stock > 0 %}
+      <button class="btn btn-success btn-lg" disabled>🛒 Agregar al Carrito</button>
+      <small class="text-muted d-block mt-2">* Funcionalidad de carrito próximamente</small>
+    {% else %}
+      <button class="btn btn-secondary btn-lg" disabled>😞 Sin Stock</button>
+    {% endif %}
+  </div>
+</div>
+<!-- /.card -->
+
+<!-- Product Reviews -->
+<div class="card card-outline-secondary my-4">
+  <div class="card-header">
+    Reseñas del Producto
+  </div>
+  <div class="card-body">
+    <p>Excelente producto, muy buena calidad. Lo recomiendo totalmente para cualquier ocasión.</p>
+    <small class="text-muted">Publicado por Cliente Anónimo el {{ producto.pub_date|date:"d/m/Y" }}</small>
+    <hr>
+    <p>Muy satisfecho con la compra. El producto llegó en perfectas condiciones y cumple con las expectativas.</p>
+    <small class="text-muted">Publicado por Cliente Verificado el {{ producto.pub_date|date:"d/m/Y" }}</small>
+    <hr>
+    <p>Buena relación calidad-precio. El producto es tal como se describe en la página web.</p>
+    <small class="text-muted">Publicado por Comprador Frecuente el {{ producto.pub_date|date:"d/m/Y" }}</small>
+    <hr>
+    <button class="btn btn-success" disabled>Dejar una Reseña</button>
+    <small class="text-muted ml-2">* Funcionalidad próximamente</small>
+  </div>
+</div>
+<!-- /.card -->
+
+<!-- Navigation buttons -->
+<div class="mb-4">
+  <a href="{% url 'tienda:productos_por_categoria' producto.categoria.id %}" class="btn btn-outline-primary">
+    ← Ver más productos de {{ producto.categoria.nombre }}
+  </a>
+  <a href="{% url 'tienda:index' %}" class="btn btn-outline-secondary">
+    🏠 Volver al inicio
+  </a>
+</div>
+
+{% endblock %}

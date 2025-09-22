@@ -1,0 +1,73 @@
+{% extends 'tienda/layout.html' %}
+{% block title %}{{ categoria.nombre }} - Tienda{% endblock %}
+{% block content %}
+
+<!-- Breadcrumb -->
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item"><a href="{% url 'tienda:index' %}">Inicio</a></li>
+    <li class="breadcrumb-item active" aria-current="page">{{ categoria.nombre }}</li>
+  </ol>
+</nav>
+
+<!-- Category Header -->
+<div class="d-flex align-items-center mb-4 mt-4">
+  {% if categoria.foto %}
+    <img src="{{ categoria.foto.url }}" alt="{{ categoria.nombre }}" width="64" height="64" class="me-3" style="object-fit:cover;border-radius:12px;">
+  {% else %}
+    <span class="me-3" style="width:64px;height:64px;background:#6c757d;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:32px;color:white;">📦</span>
+  {% endif %}
+  <div>
+    <h1>{{ categoria.nombre }}</h1>
+    <p class="text-muted mb-0">{{ productos|length }} producto{{ productos|length|pluralize }}</p>
+  </div>
+</div>
+
+<!-- Products Grid -->
+<div class="row">
+  {% for p in productos %}
+    <div class="col-lg-4 col-md-6 mb-4">
+      <div class="card h-100">
+        <a href="{% url 'tienda:producto_detalle' p.id %}">
+          {% if p.imagen %}
+            <img class="card-img-top" src="{{ p.imagen.url }}" alt="{{ p.nombre }}" style="height: 200px; object-fit: cover;">
+          {% else %}
+            <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background: #f8f9fa; color: #6c757d; font-size: 48px;">
+              📦
+            </div>
+          {% endif %}
+        </a>
+        <div class="card-body">
+          <h4 class="card-title">
+            <a href="{% url 'tienda:producto_detalle' p.id %}">{{ p.nombre }}</a>
+          </h4>
+          <h5>S/ {{ p.precio }}</h5>
+          <p class="card-text">Stock: {{ p.stock }} unidades</p>
+        </div>
+        <div class="card-footer">
+          <small class="text-muted">
+            ⭐ ⭐ ⭐ ⭐ ⭐ 
+            <span class="ml-2">{{ p.pub_date|date:"d/m/Y" }}</span>
+          </small>
+        </div>
+      </div>
+    </div>
+  {% empty %}
+    <div class="col-12">
+      <div class="alert alert-warning">
+        <h4>📭 No hay productos en esta categoría</h4>
+        <p>La categoría <strong>{{ categoria.nombre }}</strong> aún no tiene productos.</p>
+        <a href="{% url 'tienda:index' %}" class="btn btn-primary">Ver todos los productos</a>
+      </div>
+    </div>
+  {% endfor %}
+</div>
+
+<!-- Navigation buttons -->
+<div class="mt-4">
+  <a href="{% url 'tienda:index' %}" class="btn btn-outline-secondary">
+    ← Volver a todos los productos
+  </a>
+</div>
+
+{% endblock %}

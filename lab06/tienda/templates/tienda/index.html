@@ -1,0 +1,74 @@
+{% extends 'tienda/layout.html' %}
+{% block title %}Inicio - Tienda{% endblock %}
+{% block content %}
+
+<!-- Carousel -->
+<div id="carouselExampleIndicators" class="carousel slide my-4" data-ride="carousel">
+  <ol class="carousel-indicators">
+    <li data-target="#carouselExampleIndicators" data-slide-to="0" class="active"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="1"></li>
+    <li data-target="#carouselExampleIndicators" data-slide-to="2"></li>
+  </ol>
+  <div class="carousel-inner" role="listbox">
+    <div class="carousel-item active">
+      <img class="d-block img-fluid" src="https://via.placeholder.com/900x350/007bff/ffffff?text=¡Bienvenido+a+nuestra+Tienda!" alt="Primera imagen">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block img-fluid" src="https://via.placeholder.com/900x350/28a745/ffffff?text=Los+Mejores+Productos" alt="Segunda imagen">
+    </div>
+    <div class="carousel-item">
+      <img class="d-block img-fluid" src="https://via.placeholder.com/900x350/dc3545/ffffff?text=Ofertas+Especiales" alt="Tercera imagen">
+    </div>
+  </div>
+  <a class="carousel-control-prev" href="#carouselExampleIndicators" role="button" data-slide="prev">
+    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+    <span class="sr-only">Anterior</span>
+  </a>
+  <a class="carousel-control-next" href="#carouselExampleIndicators" role="button" data-slide="next">
+    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+    <span class="sr-only">Siguiente</span>
+  </a>
+</div>
+
+<!-- Products Grid -->
+<div class="row">
+  {% for p in productos %}
+  <div class="col-lg-4 col-md-6 mb-4">
+    <div class="card h-100">
+      <a href="{% url 'tienda:producto_detalle' p.id %}">
+        {% if p.imagen %}
+          <img class="card-img-top" src="{{ p.imagen.url }}" alt="{{ p.nombre }}" style="height: 200px; object-fit: cover;">
+        {% else %}
+          <div class="card-img-top d-flex align-items-center justify-content-center" style="height: 200px; background: #f8f9fa; color: #6c757d; font-size: 48px;">
+            📦
+          </div>
+        {% endif %}
+      </a>
+      <div class="card-body">
+        <h4 class="card-title">
+          <a href="{% url 'tienda:producto_detalle' p.id %}">{{ p.nombre }}</a>
+        </h4>
+        <h5>S/ {{ p.precio }}</h5>
+        <p class="card-text">Stock: {{ p.stock }} unidades</p>
+        <small class="text-muted">{{ p.categoria.nombre }}</small>
+      </div>
+      <div class="card-footer">
+        <small class="text-muted">
+          ⭐ ⭐ ⭐ ⭐ ⭐ 
+          <span class="ml-2">{{ p.pub_date|date:"d/m/Y" }}</span>
+        </small>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info">
+      <h4>😔 No hay productos disponibles</h4>
+      <p>Aún no se han agregado productos a la tienda.</p>
+      <a href="/admin/" class="btn btn-primary">Ir al Panel de Administración</a>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+
+{% endblock %}
