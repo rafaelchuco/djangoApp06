@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404
-from .models import Producto, Categoria
+from .models import Producto, Categoria, 
 
 def index(request):
     productos = Producto.objects.select_related('categoria').order_by('-pub_date')
